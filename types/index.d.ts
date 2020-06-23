@@ -22,10 +22,10 @@ export interface SelectTextOptions {
 export function highlight(
   doc: HTMLElement,
   elementId: string,
-  options: HighlightOptions,
+  options?: HighlightOptions,
 ): () => void;
 
 export function selectText(
   doc: HTMLElement,
-  options: SelectTextOptions,
+  options?: SelectTextOptions,
 ): () => void;
