@@ -1,0 +1,13 @@
+.unified-doc-highlighter {
+  animation-fill-mode: forwards;
+  animation-name: highlight;
+}
+
+@keyframes highlight {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
