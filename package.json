@@ -1,6 +1,6 @@
 {
   "name": "unified-doc-dom",
-  "version": "0.1.6-beta.0",
+  "version": "0.1.7-beta.0",
   "description": "DOM APIs for unified-doc",
   "license": "MIT",
   "homepage": "https://github.com/unified-doc/unified-doc-dom",
@@ -34,6 +34,7 @@
     "clean": "rm -rf dist",
     "dev": "microbundle watch",
     "lint": "xo --fix; tsc",
+    "prepare": "npm run build",
     "test": "echo 'probably too much effort to test.  PRs welcome :)'",
     "test:run": "npm run test"
   },
