@@ -28,7 +28,7 @@
     "browser"
   ],
   "scripts": {
-    "bootstrap": "npx lerna bootstrap",
+    "bootstrap": "lerna bootstrap",
     "build": "lerna exec --parallel microbundle",
     "clean": "lerna exec --parallel 'rm -rf dist node_modules'",
     "dev": "lerna exec --parallel 'microbundle watch'",

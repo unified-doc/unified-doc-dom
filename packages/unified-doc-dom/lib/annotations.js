@@ -7,9 +7,8 @@ export function registerAnnotations(docElement, annotations, callbacks = {}) {
   const { onClick = noop, onMouseEnter = noop, onMouseOut = noop } = callbacks;
 
   // initialize and track annotation callbacks by annotation id
-  const annotationData = annotations.reduce((acc, annotation) => {
+  const annotationCallbacks = annotations.reduce((acc, annotation) => {
     acc[annotation.id] = {
-      annotation,
       click: (event) => onClick(event, annotation),
       mouseenter: (event) => onMouseEnter(event, annotation),
       mouseout: (event) => onMouseOut(event, annotation),
@@ -17,15 +16,13 @@ export function registerAnnotations(docElement, annotations, callbacks = {}) {
     return acc;
   }, {});
 
-  function getAnnotationData(element) {
+  function getCallbacks(element) {
     const annotationId = element.getAttribute(annotationIdAttribute);
-    return annotationData[annotationId];
+    return annotationCallbacks[annotationId];
   }
 
   elements.forEach((element) => {
-    const { annotation, click, mouseenter, mouseout } = getAnnotationData(
-      element,
-    );
+    const { click, mouseenter, mouseout } = getCallbacks(element);
     element.addEventListener('click', click);
     element.addEventListener('mouseenter', mouseenter);
     element.addEventListener('mouseout', mouseout);
@@ -33,9 +30,7 @@ export function registerAnnotations(docElement, annotations, callbacks = {}) {
 
   function cleanup() {
     elements.forEach((element) => {
-      const { annotation, click, mouseenter, mouseout } = getAnnotationData(
-        element,
-      );
+      const { click, mouseenter, mouseout } = getCallbacks(element);
       element.removeEventListener('click', click);
       element.removeEventListener('mouseenter', mouseenter);
       element.removeEventListener('mouseout', mouseout);
