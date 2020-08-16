@@ -1,16 +1,12 @@
 export interface HighlightOptions {
-  callback?: (element: HTMLElement) => void;
+  background?: string;
   durationMs?: number;
   highlighterClassName?: string;
-  highlighterId?: string;
-  style?: {
-    animationTimingFunction?: string;
-    background?: string;
-  };
+  selector?: (elementId: string) => string;
 }
 
 export function highlight(
-  doc: HTMLElement,
+  docElement: HTMLElement,
   elementId: string,
   options?: HighlightOptions,
 ): () => void;

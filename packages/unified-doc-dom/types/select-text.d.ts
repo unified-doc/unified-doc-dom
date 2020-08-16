@@ -9,6 +9,6 @@ export interface SelectTextOptions {
 }
 
 export function selectText(
-  doc: HTMLElement,
+  docElement: HTMLElement,
   options?: SelectTextOptions,
 ): () => void;

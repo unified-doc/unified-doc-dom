@@ -1,101 +1,92 @@
 import ResizeObserver from 'resize-observer-polyfill';
 
-function createHighlighter({
-  durationMs,
-  highlighterClassName,
-  highlighterId,
-  style,
-}) {
-  const {
-    animationTimingFunction = 'ease-out',
-    background = 'rgba(11, 95, 255, 0.2)',
-  } = style;
+const defaultOptions = {
+  background: 'rgba(11, 95, 255, 0.2)',
+  durationMs: 6000,
+  highlighterClassName: 'unified-doc-highlighter',
+  selector: (elementId) => `[data-annotation-id='${elementId}']`,
+};
 
-  const highlighter = document.createElement('div');
-  highlighter.setAttribute('id', highlighterId);
-  highlighter.className = highlighterClassName;
-  highlighter.style.animationDuration = `${durationMs}ms`;
-  highlighter.style.animationTimingFunction = animationTimingFunction;
-  highlighter.style.background = background;
-  highlighter.style.left = '0';
-  highlighter.style.position = 'absolute';
-  highlighter.style.right = '0';
-  highlighter.style.top = '0';
+class Highlighter {
+  constructor(target, options) {
+    const { background, durationMs, highlighterClassName } = options;
 
-  return highlighter;
-}
+    // cleanup any old instances
+    const oldHighlighter = document.querySelector(`.${highlighterClassName}`);
+    if (oldHighlighter) {
+      oldHighlighter.remove();
+    }
 
-function removeHighlighter(highlighterId) {
-  const highlighter = document.getElementById(highlighterId);
-  if (highlighter) {
-    highlighter.remove();
+    // create highlighter
+    this.highlighter = document.createElement('div');
+    this.highlighter.className = highlighterClassName;
+    this.highlighter.style.background = background;
+    this.highlighter.style.left = '0';
+    this.highlighter.style.position = 'fixed';
+    this.highlighter.style.right = '0';
+    this.highlighter.style.top = '0';
+    this.highlighter.style.animationDuration = `${durationMs}ms`;
+
+    if (target) {
+      target.append(this.highlighter);
+    }
+  }
+
+  destroy() {
+    this.highlighter.remove();
+  }
+
+  update({ height, left, top, width }) {
+    this.highlighter.style.height = `${height}px`;
+    this.highlighter.style.left = `${left}px`;
+    this.highlighter.style.top = `${top}px`;
+    this.highlighter.style.width = `${width}px`;
   }
 }
 
-function resizeHighlighter(highlighter, { height, left, width }) {
-  highlighter.style.height = `${height}px`;
-  highlighter.style.left = `${left}px`;
-  highlighter.style.width = `${width}px`;
+function getBoundary(context, first, next) {
+  const contextRect = context.getBoundingClientRect();
+  const firstRect = first.getBoundingClientRect();
+  const nextRect = next.getBoundingClientRect();
+  return {
+    height: nextRect.bottom - firstRect.top,
+    left: contextRect.left,
+    top: firstRect.top,
+    width: contextRect.width,
+  };
 }
 
-export default function highlight(doc, elementId, options = {}) {
-  const {
-    callback = () => {},
-    durationMs = 3000,
-    highlighterClassName = 'unified-doc-highlighter',
-    highlighterId = 'unified-doc-highlighter',
-    style = {},
-  } = options;
+export default function highlight(docElement, elementId, options) {
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+  const { durationMs, selector } = mergedOptions;
 
-  // remove highlighter if it exists
-  removeHighlighter(highlighterId);
+  const elements = document.querySelectorAll(selector(elementId));
+  const first = elements[0];
+  const last = elements[elements.length - 1];
 
-  let highlighter;
-  let resizeObserver;
-  const element = document.getElementById(elementId);
+  // create highlighter and update on resize/scroll
+  const highlighter = new Highlighter(first, mergedOptions);
+  const resizeObserver = new ResizeObserver(() => update());
+  resizeObserver.observe(docElement);
+  window.addEventListener('scroll', update);
+
+  // cleanup based on animation duration timeout, and return cleanup function
+  const timeout = setTimeout(() => cleanup(), durationMs);
+
+  function update() {
+    if (first && last) {
+      highlighter.update(getBoundary(docElement, first, last));
+    }
+  }
 
   function cleanup() {
-    if (highlighter) {
-      highlighter.remove();
-    }
-    if (resizeObserver) {
-      resizeObserver.unobserve(doc);
-    }
-  }
-
-  // highlight element if it exists
-  if (element) {
-    const sourceElementPosition = element.style.position;
-
-    highlighter = createHighlighter({
-      highlighterId,
-      highlighterClassName,
-      durationMs,
-      style,
-    });
-
-    // resize highlighter when doc dimensions change
-    resizeObserver = new ResizeObserver(() => {
-      const resizeOptions = {
-        height: element.offsetHeight,
-        width: doc.getBoundingClientRect().width,
-        left: doc.offsetLeft - element.offsetLeft,
-      };
-      resizeHighlighter(highlighter, resizeOptions);
-    });
-    resizeObserver.observe(doc);
-
-    // attach highlighter
-    element.style.position = 'relative';
-    element.append(highlighter);
-
-    // cleanup after durationMs has elapsed
-    setTimeout(() => {
-      element.style.position = sourceElementPosition;
-      cleanup();
-    }, durationMs);
-
-    callback(element);
+    clearTimeout(timeout);
+    highlighter.destroy();
+    resizeObserver.unobserve(docElement);
+    window.removeEventListener('scroll', update);
   }
 
   return cleanup;

@@ -1,24 +1,26 @@
 import rangy from 'rangy';
 
-export default function selectText(doc, options = {}) {
-  const { callback = () => {} } = options;
+const defaultOptions = {
+  callback: (_selectedText) => {},
+};
 
-  function handleSelectText() {
+export default function selectText(docElement, options = defaultOptions) {
+  function select() {
     const selection = rangy.getSelection();
-    const bookmark = selection.getBookmark(doc);
+    const bookmark = selection.getBookmark(docElement);
     const { start, end } = bookmark.rangeBookmarks[0];
-    if (Number.isInteger(start) && Number.isInteger(end) && end > start) {
-      const value = doc.textContent.slice(start, end);
-      callback({ start, end, value });
+    if (end > start) {
+      const value = docElement.textContent.slice(start, end);
+      options.callback({ start, end, value });
     }
     selection.removeAllRanges();
   }
 
   function cleanup() {
-    doc.removeEventListener('mouseup', handleSelectText);
+    docElement.removeEventListener('mouseup', select);
   }
 
-  doc.addEventListener('mouseup', handleSelectText);
+  docElement.addEventListener('mouseup', select);
 
   return cleanup;
 }
