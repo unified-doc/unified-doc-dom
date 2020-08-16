@@ -1,9 +1,10 @@
 .unified-doc-highlighter {
   animation-fill-mode: forwards;
-  animation-name: highlight;
+  animation-name: fade-out;
+  animation-timing-function: ease-out;
 }
 
-@keyframes highlight {
+@keyframes fade-out {
   0% {
     opacity: 1;
   }
