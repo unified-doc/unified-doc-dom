@@ -1,4 +1,3 @@
-import highlight from './lib/highlight';
-import selectText from './lib/select-text';
-
-export { highlight, selectText };
+export * from './lib/annotations';
+export * from './lib/highlight';
+export * from './lib/select-text';

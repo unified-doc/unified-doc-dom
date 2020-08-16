@@ -1,3 +1,3 @@
 describe('select-text', () => {
-  it('should pass', () => {});
+  it('TODO: add tests', () => {});
 });

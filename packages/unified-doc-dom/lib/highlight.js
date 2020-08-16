@@ -2,13 +2,13 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 const defaultOptions = {
   background: 'rgba(11, 95, 255, 0.2)',
-  durationMs: 6000,
+  durationMs: 5000,
   highlighterClassName: 'unified-doc-highlighter',
   selector: (elementId) => `[data-annotation-id='${elementId}']`,
 };
 
 class Highlighter {
-  constructor(target, options) {
+  constructor(targetElement, options) {
     const { background, durationMs, highlighterClassName } = options;
 
     // cleanup any old instances
@@ -18,57 +18,57 @@ class Highlighter {
     }
 
     // create highlighter
-    this.highlighter = document.createElement('div');
-    this.highlighter.className = highlighterClassName;
-    this.highlighter.style.background = background;
-    this.highlighter.style.left = '0';
-    this.highlighter.style.position = 'fixed';
-    this.highlighter.style.right = '0';
-    this.highlighter.style.top = '0';
-    this.highlighter.style.animationDuration = `${durationMs}ms`;
+    this.highlighterElement = document.createElement('div');
+    this.highlighterElement.className = highlighterClassName;
+    this.highlighterElement.style.background = background;
+    this.highlighterElement.style.left = '0';
+    this.highlighterElement.style.position = 'fixed';
+    this.highlighterElement.style.right = '0';
+    this.highlighterElement.style.top = '0';
+    this.highlighterElement.style.animationDuration = `${durationMs}ms`;
 
-    if (target) {
-      target.append(this.highlighter);
+    if (targetElement) {
+      targetElement.append(this.highlighterElement);
     }
   }
 
   destroy() {
-    this.highlighter.remove();
+    this.highlighterElement.remove();
   }
 
   update({ height, left, top, width }) {
-    this.highlighter.style.height = `${height}px`;
-    this.highlighter.style.left = `${left}px`;
-    this.highlighter.style.top = `${top}px`;
-    this.highlighter.style.width = `${width}px`;
+    this.highlighterElement.style.height = `${height}px`;
+    this.highlighterElement.style.left = `${left}px`;
+    this.highlighterElement.style.top = `${top}px`;
+    this.highlighterElement.style.width = `${width}px`;
   }
 }
 
-function getBoundary(context, first, next) {
-  const contextRect = context.getBoundingClientRect();
-  const firstRect = first.getBoundingClientRect();
-  const nextRect = next.getBoundingClientRect();
+function getBoundary(contextElement, firstElement, nextElement) {
+  const contextRect = contextElement.getBoundingClientRect();
+  const firstElementRect = firstElement.getBoundingClientRect();
+  const nextElementRect = nextElement.getBoundingClientRect();
   return {
-    height: nextRect.bottom - firstRect.top,
+    height: nextElementRect.bottom - firstElementRect.top,
     left: contextRect.left,
-    top: firstRect.top,
+    top: firstElementRect.top,
     width: contextRect.width,
   };
 }
 
-export default function highlight(docElement, elementId, options) {
+export function highlight(docElement, elementId, options) {
   const mergedOptions = {
     ...defaultOptions,
     ...options,
   };
   const { durationMs, selector } = mergedOptions;
 
-  const elements = document.querySelectorAll(selector(elementId));
-  const first = elements[0];
-  const last = elements[elements.length - 1];
+  const elements = docElement.querySelectorAll(selector(elementId));
+  const firstElement = elements[0];
+  const lastElement = elements[elements.length - 1];
 
   // create highlighter and update on resize/scroll
-  const highlighter = new Highlighter(first, mergedOptions);
+  const highlighter = new Highlighter(firstElement, mergedOptions);
   const resizeObserver = new ResizeObserver(() => update());
   resizeObserver.observe(docElement);
   window.addEventListener('scroll', update);
@@ -77,8 +77,8 @@ export default function highlight(docElement, elementId, options) {
   const timeout = setTimeout(() => cleanup(), durationMs);
 
   function update() {
-    if (first && last) {
-      highlighter.update(getBoundary(docElement, first, last));
+    if (firstElement && lastElement) {
+      highlighter.update(getBoundary(docElement, firstElement, lastElement));
     }
   }
 

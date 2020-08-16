@@ -4,7 +4,7 @@ const defaultOptions = {
   callback: (_selectedText) => {},
 };
 
-export default function selectText(docElement, options = defaultOptions) {
+export function selectText(docElement, options = defaultOptions) {
   function select() {
     const selection = rangy.getSelection();
     const bookmark = selection.getBookmark(docElement);

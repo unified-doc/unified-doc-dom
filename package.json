@@ -28,11 +28,10 @@
     "browser"
   ],
   "scripts": {
-    "bootstrap": "npm install; lerna bootstrap",
+    "bootstrap": "npx lerna bootstrap",
     "build": "lerna exec --parallel microbundle",
     "clean": "lerna exec --parallel 'rm -rf dist node_modules'",
     "dev": "lerna exec --parallel 'microbundle watch'",
-    "link": "lerna link convert",
     "lint": "xo --fix; tsc",
     "test": "jest --watch packages",
     "test:ci": "jest",
@@ -80,6 +79,7 @@
       ],
       "no-warning-comments": "off",
       "padding-line-between-statements": "off",
+      "unicorn/no-reduce": "off",
       "unicorn/prefer-query-selector": "off"
     }
   }

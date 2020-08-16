@@ -1,3 +1,3 @@
-describe('highlight', () => {
+describe('file', () => {
   it('TODO: add tests', () => {});
 });
