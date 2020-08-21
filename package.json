@@ -3,30 +3,9 @@
   "name": "unified-doc-dom",
   "license": "MIT",
   "homepage": "https://github.com/unified-doc/unified-doc-dom",
-  "repository": "unified-doc/unified-doc-dom",
+  "repository": "https://github.com/unified-doc/unified-doc-dom",
   "bugs": "https://github.com/unified-doc/unified-doc-dom/issues",
   "author": "Chris Zhou <chrisrzhou@pm.me> (https://chrisrzhou.io)",
-  "keywords": [
-    "unified",
-    "doc",
-    "dom",
-    "document",
-    "file",
-    "content",
-    "unist",
-    "hast",
-    "parse",
-    "html",
-    "markdown",
-    "text",
-    "compile",
-    "export",
-    "annotate",
-    "highlight",
-    "nlp",
-    "search",
-    "browser"
-  ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna exec --parallel microbundle",
@@ -42,14 +21,15 @@
     "unified-doc-dom": "file:packages/unified-doc-dom"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-env": "^7.11.0",
     "@types/jest": "^26.0.9",
     "babel-jest": "^26.2.2",
     "husky": "^4.2.5",
-    "jest": "^26.2.2",
+    "jest": "^26.4.1",
+    "lerna": "^3.22.1",
     "microbundle": "^0.12.2",
-    "typescript": "^3.9.5",
-    "xo": "^0.32.0"
+    "typescript": "^4.0.2",
+    "xo": "^0.33.0"
   },
   "husky": {
     "hooks": {
@@ -69,18 +49,9 @@
     ],
     "prettier": true,
     "rules": {
-      "@typescript-eslint/prefer-readonly-parameter-types": "off",
       "capitalized-comments": "off",
-      "no-unused-vars": [
-        "error",
-        {
-          "argsIgnorePattern": "^_"
-        }
-      ],
-      "no-warning-comments": "off",
       "padding-line-between-statements": "off",
-      "unicorn/no-reduce": "off",
-      "unicorn/prefer-query-selector": "off"
+      "unicorn/no-reduce": "off"
     }
   }
 }
