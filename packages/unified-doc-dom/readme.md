@@ -1,6 +1,8 @@
 # unified-doc
 
-DOM APIs for [**unified-doc**][unified-doc].
+DOM APIs for [**unified-doc**][].
+
+---
 
 ## Contents
 - [Install](#install)
@@ -83,7 +85,7 @@ function saveFile(fileData: FileData): void;
 ```
 Saves a JS `File` from `FileData`.
 
-Implemented using the [`file-saver`][file-saver] package and `toFile` method.  This method is useful to save the file data returned by the `doc.file()`.
+Implemented using the [`file-saver`][] package and `toFile` method.  This method is useful to save the file data returned by the `doc.file()`.
 
 ##### Use
 ```js
