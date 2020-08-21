@@ -1,4 +1,4 @@
-import fileSaver from 'file-saver';
+import { saveAs } from 'file-saver';
 
 export async function fromFile(file) {
   const content = await file.text();
@@ -25,7 +25,7 @@ export function toFile(fileData) {
   return new File([content], name, { type });
 }
 
-export function saveAs(fileData) {
+export function saveFile(fileData) {
   const file = toFile(fileData);
-  fileSaver.saveAs(file);
+  saveAs(file);
 }

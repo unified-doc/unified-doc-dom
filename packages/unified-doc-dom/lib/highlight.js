@@ -1,10 +1,12 @@
 import ResizeObserver from 'resize-observer-polyfill';
 
+import { DATA_MARK_ID_ATTRIBUTE } from './enums';
+
 const defaultOptions = {
   background: 'rgba(11, 95, 255, 0.2)',
   durationMs: 5000,
   highlighterClassName: 'unified-doc-highlighter',
-  selector: (elementId) => `[data-annotation-id='${elementId}']`,
+  selector: (elementId) => `[${DATA_MARK_ID_ATTRIBUTE}='${elementId}']`,
 };
 
 class Highlighter {

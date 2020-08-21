@@ -1,24 +1,24 @@
-const annotationIdAttribute = 'data-annotation-id';
+import { DATA_MARK_ID_ATTRIBUTE } from './enums';
 
-function noop(_annotation, _event) {}
+function noop(_mark, _event) {}
 
-export function registerAnnotations(docElement, annotations, callbacks = {}) {
-  const elements = docElement.querySelectorAll(`[${annotationIdAttribute}]`);
+export function registerMarks(docElement, marks, callbacks = {}) {
+  const elements = docElement.querySelectorAll(`[${DATA_MARK_ID_ATTRIBUTE}]`);
   const { onClick = noop, onMouseEnter = noop, onMouseOut = noop } = callbacks;
 
-  // initialize and track annotation callbacks by annotation id
-  const annotationCallbacks = annotations.reduce((acc, annotation) => {
-    acc[annotation.id] = {
-      click: (event) => onClick(event, annotation),
-      mouseenter: (event) => onMouseEnter(event, annotation),
-      mouseout: (event) => onMouseOut(event, annotation),
+  // initialize and track mark callbacks by mark id
+  const markCallbacks = marks.reduce((acc, mark) => {
+    acc[mark.id] = {
+      click: (event) => onClick(event, mark),
+      mouseenter: (event) => onMouseEnter(event, mark),
+      mouseout: (event) => onMouseOut(event, mark),
     };
     return acc;
   }, {});
 
   function getCallbacks(element) {
-    const annotationId = element.getAttribute(annotationIdAttribute);
-    return annotationCallbacks[annotationId];
+    const markId = element.getAttribute(DATA_MARK_ID_ATTRIBUTE);
+    return markCallbacks[markId];
   }
 
   elements.forEach((element) => {
