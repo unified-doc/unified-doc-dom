@@ -1,116 +1,180 @@
 # unified-doc
 
-DOM APIs for [**unified-doc**][].
+DOM APIs for [**unified-doc**][unified-doc].
 
 ---
-
-## Contents
-- [Install](#install)
-- [API](#api)
-  - [File Data Module](#file-data-module)
-    - [`fromFile`](#fromFile)
-    - [`toFile`](#toFile)
-    - [`saveFile`](#saveFile)
-  - [Highlight Module](#highlight-module)
-    - [`highlight`](#highlight)
-  - [Marks Module](#marks-module)
-    - [`registerMarks`](#registerMarks)
-  - [Select Text Module](#select-text-module)
-    - [`selectText`](#selectText)
 
 ## Install
 ```sh
 npm install unified-doc-dom
 ```
 
+## Use
+
+```js
+import unifiedDoc from 'unified-doc';
+import {
+  fromFile,
+  highlight,
+  registerMarks,
+  saveFile,
+  selectText
+} from 'unified-doc-dom';
+
+const file = new File(...);
+const marks: [
+  { id: 'a', start: 0, end: 5 },
+  { id: 'b', start: 7, end: 10 },
+];
+
+// prepare data from file and initialize a doc instance
+const fileData = await fromFile(file);
+const doc = unifiedDoc({
+  content: fileData.content,
+  filename: fileData.name,
+  marks,
+});
+
+// save files in different format
+function saveAsHtml() {
+  saveFile(doc.file('.html'));
+}
+function saveAsText() {
+  saveFile(doc.file('.txt'));
+}
+
+// render the document and retrieve the docElement DOM element
+const docElement = ... // via doc.compile()
+
+// register click events and custom tooltip implementations with registerMarks
+function createTooltip(event, mark) {...}
+function destroyTooltip(event, mark) {...}
+function register() {
+  registerMarks(docElement, marks, {
+    onClick: (event, mark) => console.log(mark.id),
+    onMouseEnter: (event, mark) => createTooltip(event, mark),
+    onMouseLeave: (event, mark) => destroyTooltip(event, mark),
+  })
+}
+
+// highlights a mark (e.g. triggered from a button's click event)
+function highlightMark(markId) {
+  const cleanup = highlight(docElement, markId);
+  // use the cleanup function appropriately in a controlled manner
+}
+
+// update/add marks on text selection
+function register() {
+  function callback(selectedText) {
+    marks.push(selectedText);
+  }
+  const cleanup = selectText(docElement, { callback });
+  // use the cleanup function appropriately in a controlled manner
+}
+```
+
 ## API
 
-The following documentation organizes the API methods by functionality.  The term `doc` used in the documentation refers to a `unified-doc` instance.
+The term `doc` used below refers to a `unified-doc` instance.
 
-## File Data Module
+- [`fromFile`](#fromFile)
+- [`toFile`](#toFile)
+- [`saveFile`](#saveFile)
+- [`highlight`](#highlight)
+- [`registerMarks`](#registerMarks)
+- [`selectText`](#selectText)
 
-This module provides methods that work with the `FileData` interface .  A `FileData` object is usually returned by calling the `doc.file()` method.
-
-#### `fromFile`
-##### Interface
+### `fromFile`
+#### Interface
 ```ts
 function fromFile(file: File): Promise<FileData>
 ```
 Returns `FileData` from a JS `File`.
 
-Can only be used **asynchronously**.  This method is useful to extract file data that will be passed to `unified-doc` during initialization (e.g. `name`, `content`).
+Can only be used **asynchronously**.  This method is useful to prepare file data that will be passed to `unified-doc` during initialization (e.g. `name`, `content`).
 
-##### Use
+#### Example
 ```js
 import { fromFile } from 'unified-doc-dom';
 
-const file = File(['some content'], 'file.html', { type: 'text/html' });
-const fileData = fromFile(file);
+const file = File(['> some **strong** content'], 'doc.md', { type: 'text/markdown' });
+const fileData = await fromFile(file);
+
 expect(fileData).toEqual({
-  content: 'some content',
-  extension: '.html',
-  name: 'file.html',
-  stem: 'file',
-  type: 'text/html',
+  content: '> some **strong** content',
+  extension: '.md',
+  name: 'doc.md',
+  stem: 'doc',
+  type: 'text/markdown',
 });
 ```
 
-#### `toFile`
-##### Interface
+### `toFile`
+#### Interface
 ```ts
 function toFile(fileData: FileData): File;
 ```
 Returns a JS `File` from `FileData`.
 
-This method is useful to convert the file data returned by the `doc.file()` API method into a JS `File` object.
+This method is useful to convert file data into a JS `File` object.  When used together with `doc.file()`, this is an easy way to retrieve file representations in supported formats.
 
-##### Use
+#### Example
 ```js
 import { toFile } from 'unified-doc-dom';
 import unifiedDoc from 'unified-doc';
 
 const doc = unifiedDoc({
-  content: 'some content',
-  filename: 'file.html',
+  content: '> some **strong** content',
+  filename: 'doc.md',
 })
 
-const file = toFile(doc.file());
-expect(file).toEqual(File(['some content'], 'file.html', { type: 'text/html' }));
+expect(toFile(doc.file('.txt')))
+  .toEqual(File(
+    ['some strong content'],
+    'doc.txt',
+    { type: 'text/plain' },
+  ));
+expect(toFile(doc.file('.html')))
+  .toEqual(File(
+    ['<blockquote>some <strong>strong</strong> content<blockquote>'],
+    'doc.html',
+    { type: 'text/html' }
+  ));
 ```
 
-#### `saveFile`
-##### Interface
+### `saveFile`
+#### Interface
 ```ts
 function saveFile(fileData: FileData): void;
 ```
 Saves a JS `File` from `FileData`.
 
-Implemented using the [`file-saver`][] package and `toFile` method.  This method is useful to save the file data returned by the `doc.file()`.
+Implemented using the [`file-saver`][file-saver] package and `toFile` method.  This method is useful to save the file data returned by the `doc.file()`.
 
-##### Use
+#### Example
 ```js
 import { saveFile } from 'unified-doc-dom';
 import unifiedDoc from 'unified-doc';
 
 const doc = unifiedDoc({
-  content: 'some content',
-  filename: 'file.html',
+  content: '> some **strong** content',
+  filename: 'doc.md',
 })
 
-function handleSaveSourceFile() {
+function saveAsSource() {
   saveFile(doc.file());
 }
 
-function handleSaveHtmlFile() {
+function saveAsHtml() {
   saveFile(doc.file('.html'));
 }
 
-function handleSaveTextFile() {
+function saveAsText() {
   saveFile(doc.file('.txt'));
 }
 ```
 
-##### Related interfaces
+#### Related interfaces
 ```ts
 interface FileData {
   /** file content in string form */
@@ -126,12 +190,8 @@ interface FileData {
 }
 ```
 
-### Highlight Module
-
-This module provides methods that allow highlighting DOM elements under a provided `docElement` (created by `unified-doc`).
-
-#### `highlight`
-##### Interface
+### `highlight`
+#### Interface
 ```ts
 function highlight(
   /** document DOM element rendered by `unified-doc` */
@@ -144,9 +204,9 @@ function highlight(
 ```
 Highlights all elements that match a provided `elementId` under a `docElement` rendered by `unified-doc`.
 
-The highlighter draws a bounding box around all queried elements and is removed after a specified duration.  The method returns a cleanup function that can be called appropriately.
+The highlighter draws a bounding box around all queried elements and removes itself after a specified duration.  The method returns a cleanup function that can be called appropriately.
 
-##### Use
+#### Example
 ```js
 import { highlight } from 'unified-doc-dom';
 
@@ -168,7 +228,7 @@ function handleHighlightElement(elementId) {
 }
 ```
 
-##### Related interfaces
+#### Related interfaces
 ```ts
 interface HighlightOptions {
   /** background color of the highlighter.  A low opacity is recommended e.g. rgba(0, 0, 255, 0.2) */
@@ -182,12 +242,8 @@ interface HighlightOptions {
 }
 ```
 
-### Marks Module
-
-This module provides methods that enhance the `marks` rendered by `unified-doc`.
-
-#### `registerMarks`
-##### Interface
+### `registerMarks`
+#### Interface
 ```ts
 function registerMarks(
   /** document DOM element rendered by `unified-doc` */
@@ -200,7 +256,7 @@ function registerMarks(
 ```
 Registers all `mark` elements with provided `callbacks` under a `docElement` rendered by `unified-doc`
 
-##### Related interfaces
+#### Related interfaces
 ```ts
 interface Mark {
   /** unique ID for mark (required for mark algorithm to work) */
@@ -228,10 +284,8 @@ interface MarkCallbacks {
 }
 ```
 
-### Select Text Module
-
-#### `selectText`
-##### Interface
+### `selectText`
+#### Interface
 ```ts
 function selectText(
   /** document DOM element rendered by `unified-doc` */
@@ -240,11 +294,11 @@ function selectText(
   options?: SelectTextOptions,
 ): () => void;
 ```
-Capture text selection values (`mark`-compatible) under the `docElement` rendered by `unified-doc`.
+Capture selected text under the `docElement` rendered by `unified-doc`.
 
-The selected text has a similar interface as a `Mark`, allowing the captured selected text to be easily integrated as `marks` to update marks/annotations used by `unified-doc`.
+Implemented using the [`rangy`][rangy] package.  The selected text object is `Mark`-compatible, allowing easy integration with `marks` used by `unified-doc`.
 
-##### Related interfaces
+#### Related interfaces
 ```ts
 interface SelectedText {
   /** start offset of selected text relative to `textContent` of the `docElement` */
@@ -261,6 +315,7 @@ interface SelectTextOptions {
 }
 ```
 
-<!-- Links -->
+<!-- Definitions -->
 [unified-doc]: https://github.com/unified-doc/unified-doc
 [file-saver]: https://github.com/eligrey/FileSaver.js
+[rangy]: https://github.com/timdown/rangy 

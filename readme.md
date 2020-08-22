@@ -10,12 +10,13 @@ DOM APIs for [**unified-doc**][unified-doc].
 - [Development](#development)
 
 ## Intro
-[unified-doc][] provides a set of unified document APIs to streamline working with content across varying types.  `unified-doc-dom` extends a set of useful browser/DOM-based APIs for documents that are managed by `unified-doc`.
+`unified-doc` provides a set of unified document APIs to streamline working with content across varying types.  `unified-doc-dom` extends a set of useful browser/DOM-based APIs for documents that are rendered with `unified-doc`.
 
 With `unified-doc-dom`, we can easily
 - highlight and emphasize marked elements in a document.
-- easily convert and save supported file formats.
-- capture text selections and create compatible mark data usable by `unified-doc`.
+- convert and save supported file formats.
+- capture text selections and create `Mark` data compatible with `unified-doc`.
+- extend future features to all document types supported by `unified-doc`.
 - evolve with interoperable web technologies.
 
 ## Spec
@@ -26,16 +27,16 @@ The following packages are managed under the `unified-doc-dom` project.
 
 ### API
 Unified DOM methods
-- [unified-doc-dom][]
+- [`unified-doc-dom`][unified-doc-dom]
 
 ### Parsers
-DOM-baesd parsers that parse source content into [`hast`][] trees.
-- [unified-doc-dom-parse-pdfjs][] (in development)
+DOM-baesd parsers that parse source content into [hast][] trees.
+- [`unified-doc-dom-parse-pdfjs`][unified-doc-dom-parse-pdfjs] (in development)
 
 
 ## Development
 This project is:
-- implemented with the [unified-doc][] interface.
+- implemented with the `unified-doc` interface.
 - linted with `xo` + `prettier` + `tsc`.
 - developed and built with `microbundle`.
 - tested with `jest`.
