@@ -75,16 +75,16 @@ function register() {
 
 ## API
 
-- [`fromFile`](#fromFile)
-- [`toFile`](#toFile)
-- [`saveFile`](#saveFile)
-- [`highlight`](#highlight)
-- [`registerMarks`](#registerMarks)
-- [`selectText`](#selectText)
+- [`fromFile(file)`](#fromFilefile)
+- [`toFile(fileData)`](#toFilefileData)
+- [`saveFile(fileData)`](#saveFilefileData)
+- [`highlight(docElement, elementId[, options])`](#highlightdocElement-elementId-options)
+- [`registerMarks(docElement, marks, callbacks)`](#registerMarksdocElement-marks-callbacks)
+- [`selectText(docElement[, options])`](#selectTextdocElement-options)
 
 The term `doc` used below refers to a `unified-doc` instance.  Please refer to [**unified-doc**][unified-doc] for detailed documentation of `doc` API methods.
 
-### `fromFile`
+### `fromFile(file)`
 #### Interface
 ```ts
 function fromFile(file: File): Promise<FileData>
@@ -109,7 +109,7 @@ expect(fileData).toEqual({
 });
 ```
 
-### `toFile`
+### `toFile(fileData)`
 #### Interface
 ```ts
 function toFile(fileData: FileData): File;
@@ -142,7 +142,7 @@ expect(toFile(doc.file('.html')))
   ));
 ```
 
-### `saveFile`
+### `saveFile(fileData)`
 #### Interface
 ```ts
 function saveFile(fileData: FileData): void;
@@ -190,7 +190,7 @@ interface FileData {
 }
 ```
 
-### `highlight`
+### `highlight(docElement, elementId[, options])`
 #### Interface
 ```ts
 function highlight(
@@ -242,7 +242,7 @@ interface HighlightOptions {
 }
 ```
 
-### `registerMarks`
+### `registerMarks(docElement, marks, callbacks)`
 #### Interface
 ```ts
 function registerMarks(
@@ -284,7 +284,7 @@ interface MarkCallbacks {
 }
 ```
 
-### `selectText`
+### `selectText(docElement[, options])`
 #### Interface
 ```ts
 function selectText(
