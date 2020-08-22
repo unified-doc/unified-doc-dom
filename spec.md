@@ -18,7 +18,7 @@ This document defines how the `unified-doc-dom` interface is designed to extend 
 `unified-doc-dom` relates to:
 - the DOM in that its APIs are fully compatible with the DOM.
 - [unified][] and [hast][] in that it works with documents rendered as a result of these ecosystems of tools and utilities.
-- [unified-doc] in that it is extends DOM-based methods to documents rendered by the library.  Note that API methods in `unified-doc` are not DOM-compatible.
+- [**unified-doc**][unified-doc] in that it is extends DOM-based methods to documents rendered by the library.  Note that API methods in `unified-doc` are not DOM-compatible.
 
 ### Goals
 `unified-doc-dom` aims to
@@ -28,7 +28,7 @@ This document defines how the `unified-doc-dom` interface is designed to extend 
 - be interoperable with any `doc` instance or `docElement` rendered by `unified-doc`.
 
 ## `doc`
-A `doc` refers to an instance of `unified-doc`.  Please visit the [unified-doc][] project for more details of the `doc` interface.  `unified-doc-dom` methods may integrate with various `doc` methods to exchange data in compatible ways.  A few important integrations are elaborated below.
+A `doc` refers to an instance of `unified-doc`.  Please visit the [**unified-doc**][unified-doc] project for more details of the `doc` interface.  `unified-doc-dom` methods may integrate with various `doc` methods to exchange data in compatible ways.  A few important integrations are elaborated below.
 
 ### `FileData`
 This interface describes the relevant data that a JS `File` contains, in serializable form.  A `FileData` object can be obtained by calling the `doc.file()` method.
@@ -94,9 +94,9 @@ Some examples of DOM-based methods being interoperable with the source content a
 - **`FileData`**: An object that represents relevant `File` data, in serializable form.
 - **`marks`**: An array of data conforming to the `Mark` interface that is used by `unified-doc` to mark text nodes.
 - **`textContent`**: The text content of a `doc` or `docElement` is equivalent to the concatenation of all text node values in the document.
-- **`unified`**: the [project][unified] that unifies content as structured data.
-- **`unified-doc`**: the [project][unified-doc] that unifies document APIs on top of a unified content layer.
-- **`unified-doc-dom`**: this project that extends DOM-based APIs for the `unified-doc` project.
+- **`unified`**: The [project][unified] that unifies content as structured data.
+- **`unified-doc`**: The [project][unified-doc] that unifies document APIs on top of a unified content layer.
+- **`unified-doc-dom`**: This project that extends DOM-based APIs for the `unified-doc` project.
 
 
 <!-- Definitions -->
