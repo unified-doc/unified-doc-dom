@@ -1,4 +1,4 @@
-# unified-doc
+# unified-doc-dom
 DOM APIs for [**unified-doc**][unified-doc].
 
 ---
