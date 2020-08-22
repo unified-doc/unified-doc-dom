@@ -75,7 +75,6 @@ function register() {
 
 ## API
 
-Methods:
 - [`fromFile`](#fromFile)
 - [`toFile`](#toFile)
 - [`saveFile`](#saveFile)
@@ -83,7 +82,7 @@ Methods:
 - [`registerMarks`](#registerMarks)
 - [`selectText`](#selectText)
 
-The term `doc` used below refers to a `unified-doc` instance.
+The term `doc` used below refers to a `unified-doc` instance.  Please refer to [**unified-doc**][unified-doc] for detailed documentation of `doc` API methods.
 
 ### `fromFile`
 #### Interface
