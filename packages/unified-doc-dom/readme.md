@@ -12,7 +12,7 @@ npm install unified-doc-dom
 ## Use
 
 ```js
-import unifiedDoc from 'unified-doc';
+import Doc from 'unified-doc';
 import {
   fromFile,
   highlight,
@@ -20,6 +20,9 @@ import {
   saveFile,
   selectText
 } from 'unified-doc-dom';
+
+// optionally import provided css highlight effects, or specify your own
+import 'unified-doc-dom/css/highlight.css';
 
 const file = new File(...);
 const marks: [
@@ -29,7 +32,7 @@ const marks: [
 
 // prepare data from file and initialize a doc instance
 const fileData = await fromFile(file);
-const doc = unifiedDoc({
+const doc = Doc({
   content: fileData.content,
   filename: fileData.name,
   marks,
@@ -121,9 +124,9 @@ This method is useful to convert file data into a JS `File` object.  When used t
 #### Example
 ```js
 import { toFile } from 'unified-doc-dom';
-import unifiedDoc from 'unified-doc';
+import Doc from 'unified-doc';
 
-const doc = unifiedDoc({
+const doc = Doc({
   content: '> some **strong** content',
   filename: 'doc.md',
 })
@@ -154,9 +157,9 @@ Implemented using the [`file-saver`][file-saver] package and `toFile` method.  T
 #### Example
 ```js
 import { saveFile } from 'unified-doc-dom';
-import unifiedDoc from 'unified-doc';
+import Doc from 'unified-doc';
 
-const doc = unifiedDoc({
+const doc = Doc({
   content: '> some **strong** content',
   filename: 'doc.md',
 })
@@ -254,7 +257,7 @@ function registerMarks(
   callbacks: MarkCallbacks,
 );
 ```
-Registers all `mark` elements with provided `callbacks` under a `docElement` rendered by `unified-doc`
+Registers all `mark` elements with provided `callbacks` under a `docElement` rendered by `unified-doc`.
 
 #### Related interfaces
 ```ts

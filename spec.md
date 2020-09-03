@@ -17,15 +17,15 @@ This document defines how the `unified-doc-dom` interface is designed to extend 
 
 `unified-doc-dom` relates to:
 - the DOM in that its APIs are fully compatible with the DOM.
-- [unified][] and [hast][] in that it works with documents rendered as a result of these ecosystems of tools and utilities.
-- [**unified-doc**][unified-doc] in that it is extends DOM-based methods to documents rendered by the library.  Note that API methods in `unified-doc` are not DOM-compatible.
+- [unified][] and [hast][] in that it works with documents rendered by tools and utilities in these ecosystems.
+- [**unified-doc**][unified-doc] in that it is extends DOM-based methods to documents rendered by `unified-doc`.  Note that API methods in `unified-doc` are not DOM-compatible.
 
 ### Goals
 `unified-doc-dom` aims to
 - build useful and valuable features for `unified-doc` rendered documents, usable in the DOM.
 - implement these features in a simple and modular way.
-- be agnostic of underlying content type, (just like `unified-doc`).
-- be interoperable with any `doc` instance or `docElement` rendered by `unified-doc`.
+- interoperate with any `doc` instance or `docElement` rendered by `unified-doc`.
+- be agnostic of underlying content type.
 
 ## `doc`
 A `doc` refers to an instance of `unified-doc`.  Please visit the [**unified-doc**][unified-doc] project for more details of the `doc` interface.  `unified-doc-dom` methods may integrate with various `doc` methods to exchange data in compatible ways.  A few important integrations are elaborated below.
@@ -47,7 +47,7 @@ interface FileData {
 }
 ```
 
-Methods to convert between `FileData` and JS `File` interface would bridge the way content is sent to `unified-doc`, or stored from `unified-doc`.  This allows `unified-doc` to process and manage content, while supporting easy ways to retrieve and save the file data as JS `File` used by the rest of the web stack.
+Methods to convert between `FileData` and JS `File` interface would bridge the way content is sent to `unified-doc`, or stored from `unified-doc`.  This allows `unified-doc` to process and manage content, while supporting easy ways to retrieve and save the file data as a JS `File`, which is usable in further web applications.
 
 ### `marks`
 A `Mark` interface informs how text can be marked in a document.  Marks are generated in a document by providing an array of `marks` to `unified-doc`, where `mark` elements are added to the rendered document.
@@ -77,16 +77,17 @@ Methods to enhance marked elements with interactions can be implemented by attac
 ## `docElement`
 A `docElement` refers to the document DOM element (usually a `div`) rendered by `unified-doc`.  Having a reference to the actual DOM element allows us to implement features that affect only the `docElement`, without risk of influencing other sections of the web document.
 
-With knowledge that a `docElement` is related to its `doc` instance, and by that association, to its source content, we can interface DOM-based methods directly with the document's source content.  This is extremely powerful because we can be confident that any DOM APIs will interface directly with the source content (implemented by `unified-doc`), without needing to account for varying content types.
+The `docElement` is related to its `doc` instance, through `unified-doc`.  As a result, any DOM-based methods interacting with the `docElement`'s content is directly interacting with the `doc` instance, and by extension, its source content.  This is extremely powerful, and opens up DOM operations to manipulating the underlying source content irregardless of content type, as illustrated in the following examples:
 
-Some examples of DOM-based methods being interoperable with the source content are listed below:
 - Capture text selection events as `Mark` objects compatible with `unified-doc` to easily support ways to add `marks` through DOM interactions.
-- Marked elements under a `docElement` are directly related to `marks` specified on a `doc` instance.  Iteration of marked elements can therefore be done programmatically by iterating over the `marks` data.
-- Apply any interoperable web technologies to the `docElement` to build rich document features.  A few ideas that come to mind:
-  - Scaled document preview
-  - Printable pages
-  - Saving documents as images/canvas/pdf
-  - and other [ideas][]
+- Marked elements rendered under a `docElement` can be programmatically iterated through declarative data since they are modeled by the `marks` data supplied to `unified-doc`.
+- Potentially new ways of creating text editors where editing interactions through the `docElement` DOM node is directly updating the [hast][] tree.
+
+Since the `docElement` is just a DOM element, we should be able to apply web technologies to build cool features for all documents rendered by `unified-doc`.  A few ideas include:
+- Scalable document preview
+- Printable pages
+- Saving documents as images/canvas/pdf
+- and other [ideas][]
 
 ## Glossary
 - **`doc`**: Refers to a `unified-doc` instance.  A `doc` is compiled and rendered into a `docElement`.

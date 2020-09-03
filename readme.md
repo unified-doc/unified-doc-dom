@@ -64,7 +64,7 @@ npm run lint
 npm run test
 
 # test all packages in a single run
-npm run test:ci
+npm run test:run
 
 # publish all packages with lerna
 npm run publish
