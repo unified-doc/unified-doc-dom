@@ -13,7 +13,7 @@
     "dev": "lerna exec --parallel 'microbundle watch'",
     "lint": "xo --fix; tsc",
     "test": "jest --watch packages",
-    "test:ci": "jest",
+    "test:run": "jest",
     "prepare": "npm run clean; npm run build",
     "publish": "lerna publish"
   },
@@ -21,19 +21,19 @@
     "unified-doc-dom": "file:packages/unified-doc-dom"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.11.0",
-    "@types/jest": "^26.0.9",
+    "@babel/preset-env": "^7.11.5",
+    "@types/jest": "^26.0.13",
     "babel-jest": "^26.2.2",
     "husky": "^4.2.5",
-    "jest": "^26.4.1",
+    "jest": "^26.4.2",
     "lerna": "^3.22.1",
     "microbundle": "^0.12.2",
     "typescript": "^4.0.2",
-    "xo": "^0.33.0"
+    "xo": "^0.33.1"
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm prepare; npm run lint; npm run test:ci"
+      "pre-push": "npm prepare; npm run lint; npm run test:run"
     }
   },
   "prettier": {
