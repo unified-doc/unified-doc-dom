@@ -9,7 +9,7 @@ export function selectText(docElement, options = defaultOptions) {
     const selection = rangy.getSelection();
     const bookmark = selection.getBookmark(docElement);
     const { start, end } = bookmark.rangeBookmarks[0];
-    if (end > start) {
+    if (end >= start) {
       const value = docElement.textContent.slice(start, end);
       options.callback({ start, end, value });
     }
