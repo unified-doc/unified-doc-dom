@@ -22,18 +22,30 @@ export function registerMarks(docElement, marks, callbacks = {}) {
   }
 
   elements.forEach((element) => {
-    const { click, mouseenter, mouseout } = getCallbacks(element);
-    element.addEventListener('click', click);
-    element.addEventListener('mouseenter', mouseenter);
-    element.addEventListener('mouseout', mouseout);
+    const { click, mouseenter, mouseout } = getCallbacks(element) || {};
+    if (click) {
+      element.addEventListener('click', click);
+    }
+    if (mouseenter) {
+      element.addEventListener('mouseenter', mouseenter);
+    }
+    if (mouseout) {
+      element.addEventListener('mouseout', mouseout);
+    }
   });
 
   function cleanup() {
     elements.forEach((element) => {
-      const { click, mouseenter, mouseout } = getCallbacks(element);
-      element.removeEventListener('click', click);
-      element.removeEventListener('mouseenter', mouseenter);
-      element.removeEventListener('mouseout', mouseout);
+      const { click, mouseenter, mouseout } = getCallbacks(element) || {};
+      if (click) {
+        element.removeEventListener('click', click);
+      }
+      if (mouseenter) {
+        element.removeEventListener('mouseenter', mouseenter);
+      }
+      if (mouseout) {
+        element.removeEventListener('mouseout', mouseout);
+      }
     });
   }
 
